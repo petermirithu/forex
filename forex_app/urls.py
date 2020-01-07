@@ -4,6 +4,8 @@ from . import views
 from django.conf.urls.static import static
 
 urlpatterns = [
-    path('',views.home,name='home'),
-    path('accounts/',include('registration.backends.simple.urls')),
+    path('',views.home,name='home'),    
+    path('register_account/',views.register,name="register"),       
+    url(r'activation_sent/$',views.activation_sent,name="activation_sent"),
+    path('activate/<slug:uidb64>/<slug:token>/', views.activate,name="activate"),
 ]

@@ -22,6 +22,7 @@ MODE=config('MODE', default='dev')
 SECRET_KEY=config('SECRET_KEY')
 DEBUG=config('DEBUG',default=False,cast=bool)
 
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # Application definition
 
 INSTALLED_APPS = [

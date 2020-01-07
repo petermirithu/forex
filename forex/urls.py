@@ -19,9 +19,5 @@ from forex_app.views import register
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',include('forex_app.urls')),
-    path('accounts/login/account/register/',register,name="register"),
-    path('accounts/login/account/register/register/',register,name="register")
-   
-
+    path('',include('forex_app.urls')),    
 ]
