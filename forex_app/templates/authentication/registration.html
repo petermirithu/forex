@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <h1>welcome</h1>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+</head>
+<body style="background-color: grey;">
+    <h1 class="text-center">Registration form</h1>
+    <div class="container">
+        <div class="card" style="background-color: white;color:black;margin-top: 50px" >
+            <form method="POST" action="{%url 'register'%}" style="margin-left:150px;margin-top: 60px;margin-bottom: 50px;">
+                {% csrf_token%}
+                <label for="username">Username</label>
+                <input type="text" name="username" placeholder="Your username"><br><br>
+                <label for="first_name">First name</label>
+                <input type="text" name="first_name" placeholder="Your first name"><br><br>
+                <label for="last_name">Last name</label>
+                <input type="text" name="last_name" placeholder="Your last name"><br><br>
+                <label for="email">Email</label>
+                <input type="email" name="email" placeholder="Your email"><br><br>
+                <label for="password">Password</label>
+                <input type="password" name="password" placeholder="Password"><br><br>
+                <label for="password1">Confirm password</label>
+                <input type="password" name="password1" placeholder="Confirm password"><br><br>
+                <input type="submit">
+            </form>
+        </div>
+
+        <div>
+            {% for message in messages%}
+                <h3>{{message}}</h3>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
