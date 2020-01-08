@@ -50,7 +50,7 @@ def activation_sent(request):
 
 def activate(request, uidb64, token):
     try:
-        uid=force_text(urlsafe_base64_decode(uidb64)))
+        uid=force_text(urlsafe_base64_decode(uidb64))
         user=User.objects.get(pk=pk)
     except (TypeError, ValueError ,OverflowError, User.DoesNotExist):
         user=None
