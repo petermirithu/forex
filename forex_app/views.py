@@ -6,12 +6,13 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_text,force_bytes
 from django.contrib.auth.models import User
 from django.utils.http import urlsafe_base64_decode
+from django.utils.http import urlsafe_base64_encode
 from .tokens import account_activation_token
 from django.template.loader import render_to_string
+from .email import send_register_confirm_email
 
 def register(request):
     if request.method == 'POST':
-        username = request.POST['username']
         username = request.POST['username']
         first_name =request.POST['first_name']
         last_name = request.POST['last_name']
@@ -29,14 +30,10 @@ def register(request):
                 user.save()
 
                 forex_site=get_current_site(request)
-                mail_subject='Activate your account!'
-                message=render_to_string('authentication/email_temp.html',{
-                    'user':user,
-                    'domain':forex_site.domain,
-                    'uid':urlsafe_base64_encode(force_bytes(user.pk)),
-                    'token':account_activation_token.make_token(user),                    
-                })
-                user.email_user(subject, message)                                
+                domain=forex_site.domain
+                uid=urlsafe_base64_encode(force_bytes(user.pk))
+                token=account_activation_token.make_token(user)                    
+                send_register_confirm_email(username,email,domain,uid,token)                                
                 return redirect('activation_sent')                
         else:
             messages.info(request,'passwords should match')
@@ -65,7 +62,7 @@ def activate(request, uidb64, token):
         return render(request, 'authentication/activation_invalid.html')    
 
         # end of authentication
-@login_required(login_url = 'accounts/login/')
+@login_required(login_url = 'register_account/')
 def home(request):
     return render(request,'index.html')
 
