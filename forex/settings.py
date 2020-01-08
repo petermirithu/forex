@@ -22,7 +22,11 @@ MODE=config('MODE', default='dev')
 SECRET_KEY=config('SECRET_KEY')
 DEBUG=config('DEBUG',default=False,cast=bool)
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_USE_TLS=config('EMAIL_USE_TLS')
+EMAIL_HOST=config('EMAIL_HOST')
+EMAIL_PORT=config('EMAIL_PORT')
+EMAIL_HOST_USER=config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD=config('EMAIL_HOST_PASSWORD')
 # Application definition
 
 INSTALLED_APPS = [
@@ -74,9 +78,9 @@ if config('MODE')=='dev':
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'final',
-            'USER':'dan',
-            'PASSWORD':'12345',
+            'NAME': config('DB_NAME'),
+            'USER':config('DB_USER'),
+            'PASSWORD':config('DB_PASSWORD'),
             'PORT': '',
         }
     }
@@ -88,7 +92,7 @@ else:
     }
     db_from_env=dj_database_url.config(conn_max_age=500)
     DATABASES['default'].update(db_from_env)
-    ALLOWED_HOST=config('ALLOWED_HOST', cast=Csv)
+    ALLOWED_HOSTS=config('ALLOWED_HOSTS', cast=Csv)
    
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
