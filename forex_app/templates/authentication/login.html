@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+{% block content %}
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3"></div>
+      <div class="col-md-6">
+        <div>
+          {% for message in messages%}
+            <h3 class="alert-danger">{{message}}</h3>
+          {% endfor %}
+        </div>
+        <div class="card bg-transparent">
+          <div class="card-header"><h3><b><u>Log In</u></b></h3></div>
+          <div class="card-body">
+            <form action="{% url 'login' %}" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              {% bootstrap_form form %}
+              <div class='form-group'>
+                <input type="submit" class="btn btn-outline-primary" value="Log In">
+              </div>
+            </form>
+            <p>If you don't have an account</p>
+            <a class="nav-link btn btn-outline-danger" href="{% url 'register' %}">Sign Up</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3"></div>
+    </div>
+  </div>
+{% endblock content %}
