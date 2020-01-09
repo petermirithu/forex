@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from django.contrib.auth import get_user_model,login
+from django.contrib.auth import get_user_model,login,authenticate,logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
@@ -7,9 +7,14 @@ from django.utils.encoding import force_text,force_bytes
 from django.contrib.auth.models import User
 from django.utils.http import urlsafe_base64_decode
 from django.utils.http import urlsafe_base64_encode
-from .tokens import account_activation_token
 from django.template.loader import render_to_string
+from django.core.mail import send_mail
+from .tokens import account_activation_token
 from .email import send_register_confirm_email
+from .models import profile
+from .forms import LoginForm
+from django.contrib.auth.hashers import check_password
+
 
 def register(request):
     if request.method == 'POST':
@@ -22,8 +27,11 @@ def register(request):
 
         if password1 == password:
             if User.objects.filter(username = username):
-                messages.info(request,'This username is taken')
+                messages.info(request,'This Username is taken!')
                 return redirect('register')
+            elif User.objects.filter(email=email):
+                messages.info(request,'This Email is taken!')
+                return redirect('register')                
             else:
                 user = User.objects.create_user(username = username,password = password,email = email,first_name = first_name,last_name = last_name,)
                 user.is_active=False
@@ -36,10 +44,10 @@ def register(request):
                 send_register_confirm_email(username,email,domain,uid,token)                                
                 return redirect('activation_sent')                
         else:
-            messages.info(request,'passwords should match')
+            messages.info(request,'passwords should match!')
             return redirect('register')
         
-    else:        
+    else: 
         return render(request,'authentication/registration.html')
 
 def activation_sent(request):
@@ -48,7 +56,7 @@ def activation_sent(request):
 def activate(request, uidb64, token):
     try:
         uid=force_text(urlsafe_base64_decode(uidb64))
-        user=User.objects.get(pk=pk)
+        user=User.objects.get(pk=uid)
     except (TypeError, ValueError ,OverflowError, User.DoesNotExist):
         user=None
 
@@ -56,13 +64,55 @@ def activate(request, uidb64, token):
         user.is_active=True
         user.profile.signup_confirmation =True
         user.save()
-        login(request,User)
+        login(request,user)
         return redirect('home')
     else:
         return render(request, 'authentication/activation_invalid.html')    
 
-        # end of authentication
-@login_required(login_url = 'register_account/')
+def login_user(request):
+    if request.method=='POST':        
+        form=LoginForm(request.POST)        
+        user_name=request.POST.get('username')
+        passwd=request.POST.get('password')
+        if user_name and passwd:
+            try:
+                user_x=User.objects.get(username=user_name)                
+                matched=check_password( passwd, user_x.password)
+                user_profile=profile.get_user_profile(user_x.id)                   
+                if  matched==False:        
+                    messages.info(request,'Password is invalid!')
+                    return redirect('login')        
+
+                elif user_profile.signup_confirmation==False:
+                    messages.info(request,'Activation invalid. Please check your email to activate your account!')
+                    return redirect('login')
+                else:    
+                    login(request,user_x)
+                    return redirect('home')
+                
+            except User.DoesNotExist:                
+                messages.info(request,'That username doesnot exist!')
+                return redirect('login')                              
+        else:
+            messages.info(request,'All fields are required!')
+            return redirect('login')
+
+    else:
+        title="Login"
+        form=LoginForm()
+        context={
+            'title':title,
+            'form':form,
+        }
+        return render(request, 'authentication/login.html',context)  
+
+@login_required(login_url="/login_account/")
+def logout_request(request):  
+  logout(request)
+  return redirect('home')
+
+# end of authentication...................................................................................
+@login_required(login_url="/login_account/")
 def home(request):
     return render(request,'index.html')
 
