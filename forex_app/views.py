@@ -113,7 +113,7 @@ def logout_request(request):
   return redirect('home')
 
 # end of authentication...................................................................................
-
+ 
 # selecting account
 @login_required(login_url="/login_account/")
 def select_account(request):
