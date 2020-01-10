@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load bootstrap4 %}
+
+{% block content %}
+<div class="container">
+  <h1 class="jumbotron">Please select the type of account you wish to have.</h1>
+  <br>
+  {% for message in messages%}
+    <h3 class="alert-danger">{{message}}</h3>
+  {% endfor %}
+  <h3>Forex Account</h3>
+  <hr>
+  <div class="row">
+    <div class="col-md-6">
+      <h4>Forex's Free account</h4>
+      <br>
+      <div  onclick="myFunction1()" class="btn btn-primary">Free account</div>
+      <hr>  
+      <form id="form1" style="display:none" method='post' action="select_account/forex/free/">
+        {% csrf_token %}
+        <input type="text" class="form-control" placeholder="Enter your Email to confirm" name="email">
+        <button class="btn btn-warning" type="submit">Submit</button>            
+      </form>  
+    </div>  
+    <div class="col-md-6">
+      <h4>Forex's Silver account</h4>
+      <br>
+      <div  onclick="myFunction2()" class="btn btn-danger">Silver account</div>
+      <hr>
+      <form id="form2" style="display:none" method='post' action="select_account/forex/silver/">
+        {% csrf_token %}
+        <input type="text" class="form-control" placeholder="Enter your Email to confirm" name="email">
+        <button class="btn btn-warning" type="submit">Submit</button>            
+      </form>  
+    </div>
+  </div>  
+</div>
+
+  <br>
+<div class="container">
+  <h3>Binary Account</h3>
+  <hr>
+  <div class="row">
+    <div class="col-md-6">
+      <h4>Binary's Free account</h4>
+      <br>
+      <div  onclick="myFunction3()" class="btn btn-info">Free account</div>
+      <hr>
+      <form id="form3" style="display:none" method='post' action="/select_account/binary/free/">
+        {% csrf_token %}
+        <input type="text" class="form-control" placeholder="Enter your Email to confirm" name="email">
+        <button class="btn btn-warning" type="submit">Submit</button>            
+      </form>  
+    </div>
+    <div class="col-md-6">
+      <h4>Binary's Free account</h4>
+      <br>
+      <div  onclick="myFunction4()" class="btn btn-secondary">Silver account</div>
+      <hr>
+      <form id="form4" style="display:none" method='post' action="/select_account/binary/silver/">
+        {% csrf_token %}  
+        <input type="text" class="form-control" placeholder="Enter your Email to confirm" name="email">
+        <button class="btn btn-warning" type="submit">Submit</button>            
+      </form>  
+    </div>
+  </div>    
+</div>
+
+<script>
+  function myFunction1() {
+    var x = document.getElementById("form1");
+    if (x.style.display === "none") {
+      x.style.display = "block";
+    } else {
+      x.style.display = "none";
+    }
+  }
+
+  function myFunction2() {
+    var x = document.getElementById("form2");
+    if (x.style.display === "none") {
+      x.style.display = "block";
+    } else {
+      x.style.display = "none";
+    }
+  }
+  function myFunction3() {
+    var x = document.getElementById("form3");
+    if (x.style.display === "none") {
+      x.style.display = "block";
+    } else {
+      x.style.display = "none";
+    }
+  }
+  function myFunction4() {
+    var x = document.getElementById("form4");
+    if (x.style.display === "none") {
+      x.style.display = "block";
+    } else {
+      x.style.display = "none";
+    }
+  }
+</script>
+{% endblock content %}
+
