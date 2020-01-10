@@ -11,9 +11,10 @@ from django.template.loader import render_to_string
 from django.core.mail import send_mail
 from .tokens import account_activation_token
 from .email import send_register_confirm_email
-from .models import profile
+from .models import profile,binary_accounts
 from .forms import LoginForm
 from django.contrib.auth.hashers import check_password
+import random
 
 
 def register(request):
@@ -112,8 +113,57 @@ def logout_request(request):
   return redirect('home')
 
 # end of authentication...................................................................................
+
+# selecting account
+@login_required(login_url="/login_account/")
+def select_account(request):
+    title='Select account'
+    context={
+        'title':title
+    }
+    return render(request,'select_acc.html',context)
+    
+@login_required(login_url="/login_account/")
+def binary_account_type(request,acc_type):
+    if request.method=='POST':
+        email=request.POST.get('email')                
+        try:            
+            user_exists=User.objects.get(email=email)
+            if user_exists.email!=request.user.email:
+                messages.info(request,'Please use your correct email address that you registered with!')
+                return redirect('select_account')
+            else:
+                id_gen=random.randint(0000000,9999999)                
+                user_profile=profile.objects.get(user=user_exists)                  
+                user_profile.user_app_id=id_gen
+                user_profile.save()
+
+                user_binary_acc=binary_accounts(user=request.user,account_type=acc_type,payment=0)
+                user_binary_acc.save()
+                return redirect('home')            
+        except User.DoesNotExist:
+            messages.info(request,'Please enter a valid email!')
+            return redirect('select_account')
+            
+# selecting account over
 @login_required(login_url="/login_account/")
 def home(request):
-    return render(request,'index.html')
+    try:        
+        account_user=Forex.objects.get(user=request.user)                
+        if account_user:
+            messages.info(request,f'Good to see you in {account_user.account_type} forex account!')
+            return render(request,'index.html')        
+
+    except Forex.DoesNotExist:            
+        try:        
+            account_user=binary_accounts.objects.get(user=request.user)                
+            if account_user:
+                messages.info(request,f'Good to see you in {account_user.account_type} binary account!')
+                return render(request,'index.html')     
+
+        except binary_accounts.DoesNotExist:        
+            return redirect('select_account')
+
+    
 
 

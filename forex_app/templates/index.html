@@ -2,4 +2,7 @@
 
 {% block content %}
 <h1>Welcome to Forex</h1>
+{% for message in messages%}
+    <h3 class="alert-success">{{message}}</h3>
+  {% endfor %}
 {% endblock content %}
