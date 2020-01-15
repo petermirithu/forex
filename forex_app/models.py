@@ -16,6 +16,13 @@ class profile(models.Model):
     result=cls.objects.get(user=user_id)
     return result
 
+class Forex(models.Model):
+  user = models.OneToOneField(User,on_delete= models.CASCADE)
+  account_type = models.CharField(max_length=50)
+  payment = models.IntegerField(default=0)
+  date = models.DateTimeField(auto_now_add=True)
+  
+  
 class binary_accounts(models.Model):
   user=models.OneToOneField(User, on_delete=models.CASCADE)
   account_type=models.CharField(max_length=50)

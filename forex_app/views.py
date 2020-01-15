@@ -11,7 +11,7 @@ from django.template.loader import render_to_string
 from django.core.mail import send_mail
 from .tokens import account_activation_token
 from .email import send_register_confirm_email
-from .models import profile,binary_accounts
+from .models import profile,binary_accounts,Forex
 from .forms import LoginForm
 from django.contrib.auth.hashers import check_password
 import random
@@ -144,8 +144,34 @@ def binary_account_type(request,acc_type):
         except User.DoesNotExist:
             messages.info(request,'Please enter a valid email!')
             return redirect('select_account')
+        
+
+@login_required(login_url="/login_account/")
+def forex_account_type(request,acc_type):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        try:
+            user = User.objects.get(email = email)
+            if user.email != request.user.email:
+                messages.info(request,'please use your correct email address that you registered with.')
+                return redirect('select_account')
+            else:
+                id_forex = random.randint(0000000,9999999)
+                user_profile = profile.objects.get(user = user)
+                user_profile.user_app_id = id_forex
+                user_profile.save()
+                
+                user_forex = Forex(user = request.user,account_type = acc_type,payment = 0)
+                user_forex.save()
+                return redirect('home')
+        except User.DoesNotExist:
+            messages.info(request,'please enter a valid email')
+            return redirect('select_account')
+       
+    
             
 # selecting account over
+
 @login_required(login_url="/login_account/")
 def home(request):
     try:        
@@ -165,5 +191,3 @@ def home(request):
             return redirect('select_account')
 
     
-
-
