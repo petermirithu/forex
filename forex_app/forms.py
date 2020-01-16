@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django import forms
-from .models import Forex
+from .models import *
 
 
 class LoginForm(forms.ModelForm):        
@@ -19,3 +19,20 @@ class LoginForm(forms.ModelForm):
     #         if not user.check_password(password):
     #             raise forms.ValidationError('incorrect password')
     #     return super(LoginForm,self).clean(*args, **kwargs)
+    
+    
+class BinaryForm(forms.ModelForm):
+  class Meta:
+    model = BinarySignals
+    exclude = [
+      'posted_by',
+      'posted_on',
+    ]
+  
+class ForexForm(forms.ModelForm):
+  class Meta:
+    model = ForexSignals
+    exclude = [
+      'posted_by',
+      'posted_on',
+    ]

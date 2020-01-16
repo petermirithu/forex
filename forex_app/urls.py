@@ -14,4 +14,9 @@ urlpatterns = [
     url(r'select_account/$',views.select_account,name="select_account"),
     path('select_account/forex/<str:acc_type>/',views.forex_account_type,name="forex_acc"),
     path('select_account/binary/<str:acc_type>/',views.binary_account_type,name="binary_acc"),    
+    path('process-payment/', views.process_payment, name='process_payment'),
+    path('payment-done/', views.payment_done, name='payment_done'),
+    path('payment-cancelled/', views.payment_canceled, name='payment_cancelled'),
+    
+    
 ]

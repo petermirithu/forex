@@ -19,5 +19,6 @@ from forex_app.views import register
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',include('forex_app.urls')),    
+    path('',include('forex_app.urls')), 
+    path('paypal/', include('paypal.standard.ipn.urls')),   
 ]

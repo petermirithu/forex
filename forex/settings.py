@@ -30,6 +30,7 @@ EMAIL_HOST_PASSWORD=config('EMAIL_HOST_PASSWORD')
 # Application definition
 
 INSTALLED_APPS = [
+    'paypal.standard.ipn',
     'forex_app.apps.ForexAppConfig',
     'bootstrap4',
     'django.contrib.admin',
@@ -71,6 +72,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'forex.wsgi.application'
 
+#reciever email from paypal
+PAYPAL_RECEIVER_EMAIL = 'pyra_m.k@yahoo.com'
+ 
+PAYPAL_TEST = True
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases

@@ -32,8 +32,27 @@ class binary_accounts(models.Model):
   def __str__(self):
       return self.user
   
+class Account_price(models.Model):
+  price = models.IntegerField(default=1000)
+  account_type = models.CharField(max_length=50)
+  
+  def __str__(self):
+    return self.account_type
+
+class ForexSignals(models.Model):
+  currency_pair = models.CharField(max_length=700)
+  entry_price = models.IntegerField()
+  take_profit = models.IntegerField()
+  stop_loss = models.IntegerField()
+  signal = models.CharField(max_length=900)
+  posted_by = models.ForeignKey(User,on_delete= models.CASCADE)
+  posted_on = models.DateTimeField(auto_now_add=True)
 
 
-
-
-
+class BinarySignals(models.Model):
+  currency_pair = models.CharField(max_length=700)
+  chart_time_frame = models.IntegerField()
+  expiration_time = models.IntegerField()
+  signal = models.CharField(max_length=900)
+  posted_by = models.ForeignKey(User,on_delete= models.CASCADE)
+  posted_on = models.DateTimeField(auto_now_add=True)

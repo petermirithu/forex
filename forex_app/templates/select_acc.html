@@ -17,7 +17,7 @@
       <br>
       <div  onclick="myFunction1()" class="btn btn-primary">Free account</div>
       <hr>  
-      <form id="form1" style="display:none" method='post' action="select_account/forex/free/">
+      <form id="form1" style="display:none" method='post' action="/select_account/forex/free/">
         {% csrf_token %}
         <input type="text" class="form-control" placeholder="Enter your Email to confirm" name="email">
         <button class="btn btn-warning" type="submit">Submit</button>            
@@ -28,7 +28,7 @@
       <br>
       <div  onclick="myFunction2()" class="btn btn-danger">Silver account</div>
       <hr>
-      <form id="form2" style="display:none" method='post' action="select_account/forex/silver/">
+      <form id="form2" style="display:none" method='post' action="/select_account/forex/forexsilver/">
         {% csrf_token %}
         <input type="text" class="form-control" placeholder="Enter your Email to confirm" name="email">
         <button class="btn btn-warning" type="submit">Submit</button>            
@@ -58,7 +58,7 @@
       <br>
       <div  onclick="myFunction4()" class="btn btn-secondary">Silver account</div>
       <hr>
-      <form id="form4" style="display:none" method='post' action="/select_account/binary/silver/">
+      <form id="form4" style="display:none" method='post' action="/select_account/binary/binarysilver/">
         {% csrf_token %}  
         <input type="text" class="form-control" placeholder="Enter your Email to confirm" name="email">
         <button class="btn btn-warning" type="submit">Submit</button>            
