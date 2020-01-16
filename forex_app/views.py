@@ -15,6 +15,7 @@ from .models import profile,binary_accounts,Forex
 from .forms import LoginForm
 from django.contrib.auth.hashers import check_password
 import random
+from django.contrib.auth.decorators import permission_required
 
 
 def register(request):
@@ -190,4 +191,43 @@ def home(request):
         except binary_accounts.DoesNotExist:        
             return redirect('select_account')
 
+    
+# admin
+@login_required()
+@permission_required("True", "home")
+def user_dashboard(request):    
+    return render(request, "admin_site/dashboard.html")
+
+@login_required()
+@permission_required("True", "home")
+def registered_users(request):
+    users = User.objects.all()
+    context = {"users": users}
+    return render(request, "admin_site/users.html", context)
+
+
+@login_required()
+@permission_required("True", "home")
+def user_deactivate(request, user_id):
+    user = User.objects.get(pk=user_id)
+    user.is_active = False
+    user.save()
+    messages.success(request, f"{user.username}'s account has been successfully deactivated!")
+    return redirect("system_users")
+
+
+@login_required()
+@permission_required("True", "home")
+def user_activate(request, user_id):
+    user = User.objects.get(pk=user_id)
+    user.is_active = True
+    user.save()
+    messages.success(request, f"{user.username}'s account has been successfully activated!")
+    return redirect("system_users")
+
+@login_required()
+def logout_user(request):
+    logout(request)
+    messages.success(request, "You have successfully logout out!!!")
+    return redirect('home')
     
