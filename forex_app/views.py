@@ -21,6 +21,7 @@ from django.views.decorators.csrf import csrf_exempt
 from paypal.standard.forms import PayPalPaymentsForm
 from django.urls import reverse
 
+from django.contrib.auth.decorators import permission_required
 
 
 def register(request):
@@ -306,10 +307,10 @@ def payment_canceled(request):
 
 #END OF PAYPAL PROCESS
 
+# ADMIN
 #binaryform
-
-
 @login_required(login_url="/login_account/")
+@permission_required("True", "home")
 def binaryform(request):
     if request.method == 'POST':
         form = BinaryForm(request.POST)
@@ -327,6 +328,7 @@ def binaryform(request):
         return render(request,'')
     
 @login_required(login_url="/login_account/")
+@permission_required("True", "home")
 def forexform(request):
     if request.method == 'POST':
         form = ForexForm(request.POST)
@@ -342,3 +344,41 @@ def forexform(request):
     else:
         form = ForexForm()
         return render(request,'')
+@login_required()
+@permission_required("True", "home")
+def user_dashboard(request):    
+    return render(request, "admin_site/dashboard.html")
+
+@login_required()
+@permission_required("True", "home")
+def registered_users(request):
+    users = User.objects.all()
+    context = {"users": users}
+    return render(request, "admin_site/users.html", context)
+
+
+@login_required()
+@permission_required("True", "home")
+def user_deactivate(request, user_id):
+    user = User.objects.get(pk=user_id)
+    user.is_active = False
+    user.save()
+    messages.success(request, f"{user.username}'s account has been successfully deactivated!")
+    return redirect("system_users")
+
+
+@login_required()
+@permission_required("True", "home")
+def user_activate(request, user_id):
+    user = User.objects.get(pk=user_id)
+    user.is_active = True
+    user.save()
+    messages.success(request, f"{user.username}'s account has been successfully activated!")
+    return redirect("system_users")
+
+@login_required()
+def logout_user(request):
+    logout(request)
+    messages.success(request, "You have successfully logout out!!!")
+    return redirect('home')
+    

@@ -3,6 +3,7 @@ from django.urls import path,include
 from . import views
 from django.conf.urls.static import static
 from django.conf.urls import url
+from django.contrib.auth import views as auth_views
 
 urlpatterns = [
     path('',views.home,name='home'),    
@@ -17,6 +18,10 @@ urlpatterns = [
     path('process-payment/', views.process_payment, name='process_payment'),
     path('payment-done/', views.payment_done, name='payment_done'),
     path('payment-cancelled/', views.payment_canceled, name='payment_cancelled'),
-    
-    
+    # admin
+    path("dashboard/", views.user_dashboard, name="user_dashboard"),    
+    path("users/", views.registered_users, name="system_users"),
+    path('activate/user/<int:user_id>', views.user_activate, name='activate_user'),
+    path('deactivate/user/<int:user_id>', views.user_deactivate, name='deactivate_user'),    
+    url(r'^logout/$',views.logout_user,name='logout')
 ]
