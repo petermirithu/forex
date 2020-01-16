@@ -314,36 +314,42 @@ def payment_canceled(request):
 def binaryform(request):
     if request.method == 'POST':
         form = BinaryForm(request.POST)
-        
+        expe=str(request.POST.get('input_time'))
+        list1=expe.split(' ')
+        time=list1[0].split(':')
+        date=list1[1].split('/')
+        print(date)
+        final="{}-{}-{} {}:{}".format(date[-1],date[-3],date[-2],time[0],time[1])
+                
         if form.is_valid():
             binarysignal = form.save(commit = False)
             binarysignal.posted_by = request.user
+            binarysignal.expiration_time=final
             binarysignal.save()
-            return redirect('dashboard')
+            return redirect('user_dashboard')
         else:
             messages.info(request,'All fields are required!')
-            return redirect('dashboard')
+            return redirect('add-binary')
     else:
         form = BinaryForm()
-        return render(request,'')
+        return render(request,'admin_site/add_binary.html',{"form":form})
     
 @login_required(login_url="/login_account/")
 @permission_required("True", "home")
 def forexform(request):
     if request.method == 'POST':
         form = ForexForm(request.POST)
-        
         if form.is_valid():
             forexsignal = form.save(commit= False)
             forexsignal.posted_by = request.user
             forexsignal.save()
-            return redirect('dashboard')
+            return redirect('user_dashboard')
         else:
             messages.info(request,'All fields are required')
-            return redirect('dashboard')
+            return redirect('add-forex')
     else:
         form = ForexForm()
-        return render(request,'')
+        return render(request,'admin_site/add_forex.html',{"form":form})
 @login_required()
 @permission_required("True", "home")
 def user_dashboard(request):    

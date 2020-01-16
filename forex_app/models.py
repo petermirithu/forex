@@ -51,8 +51,8 @@ class ForexSignals(models.Model):
 
 class BinarySignals(models.Model):
   currency_pair = models.CharField(max_length=700)
-  chart_time_frame = models.IntegerField()
-  expiration_time = models.IntegerField()
+  chart_time_frame = models.DateTimeField(auto_now_add=True)
+  expiration_time = models.DateTimeField()
   signal = models.CharField(max_length=900)
   posted_by = models.ForeignKey(User,on_delete= models.CASCADE)
   posted_on = models.DateTimeField(auto_now_add=True)
