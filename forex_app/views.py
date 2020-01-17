@@ -20,7 +20,7 @@ from decimal import Decimal
 from django.views.decorators.csrf import csrf_exempt
 from paypal.standard.forms import PayPalPaymentsForm
 from django.urls import reverse
-
+from paypal.standard.models import PayPalStandardBase
 from django.contrib.auth.decorators import permission_required
 
 
@@ -132,8 +132,11 @@ def logout_request(request):
 @login_required(login_url="/login_account/")
 def select_account(request):
     title = 'Select account'
+    stuf=PayPalStandardBase.objects.all()
+    import pdb; pdb.set_trace()
     context = {
-        'title': title
+        'title': title,
+        'stuf': stuf,
     }
     return render(request, 'select_acc.html', context)
 
@@ -226,7 +229,7 @@ def process_payment(request):
         vari_x='Forex'        
         account_type = get_object_or_404(Account_price, account_type=vari_x)
 
-        host = request.get_host()
+        # host = request.get_host()
 
         paypal_dict = {
 
@@ -256,7 +259,7 @@ def process_payment(request):
     else:
         vari_y='Binary'
         account_type = get_object_or_404(Account_price, account_type=vari_y)
-        host = request.get_host()
+        # host = request.get_host()
         paypal_dict = {
 
             'business': settings.PAYPAL_RECEIVER_EMAIL,
