@@ -240,11 +240,11 @@ def process_payment(request):
 
             'currency_code': 'USD',
             
-            'notify_url': '{}/q-forex-binary-f-k-defw-dshsgdtdhvdsss-scczzc-url/'.format(host),
+            'notify_url': 'https://forex254.herokuapp.com/q-forex-binary-f-k-defw-dshsgdtdhvdsss-scczzc-url/',
 
-            'return_url': '{}/payment-done/'.format(host),
+            'return_url': 'https://forex254.herokuapp.com/payment-done/',
 
-            'cancel_return': '{}/payment-cancelled/'.format(host),
+            'cancel_return': 'https://forex254.herokuapp.com/payment-cancelled/',
         }
 
 
@@ -269,11 +269,11 @@ def process_payment(request):
 
             'currency_code': 'USD',
             
-            'notify_url': '{}/q-forex-binary-f-k-defw-dshsgdtdhvdsss-scczzc-url/'.format(host),
+            'notify_url': 'https://forex254.herokuapp.com/q-forex-binary-f-k-defw-dshsgdtdhvdsss-scczzc-url/',
 
-            'return_url': '{}/payment-done/'.format(host),
+            'return_url': 'https://forex254.herokuapp.com/payment-done/',
 
-            'cancel_return': '{}/payment-cancelled/'.format(host),
+            'cancel_return': 'https://forex254.herokuapp.com/payment-cancelled/',
         }
 
         form = PayPalPaymentsForm(initial=paypal_dict)
