@@ -18,6 +18,8 @@ urlpatterns = [
     path('process-payment/', views.process_payment, name='process_payment'),
     path('payment-done/', views.payment_done, name='payment_done'),
     path('payment-cancelled/', views.payment_canceled, name='payment_cancelled'),
+    url(r'^q-forex-binary-f-k-defw-dshsgdtdhvdsss-scczzc-url/$',include('paypal.standard.ipn.urls')),
+    
     # admin
     path("dashboard/", views.user_dashboard, name="user_dashboard"),    
     path("users/", views.registered_users, name="system_users"),

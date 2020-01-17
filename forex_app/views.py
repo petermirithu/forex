@@ -234,18 +234,20 @@ def process_payment(request):
 
             'amount': '%.2f' % account_type.price,
 
-            'item_name': 'Order {}'.format(account_type.id),
+            'item_name': 'Order {}'.format(account_type.account_type),
 
-            'invoice': str(account_type.id),
+            'invoice': str(random.randint(00000,99999)),
 
             'currency_code': 'USD',
             
+            'notify_url': '{}/q-forex-binary-f-k-defw-dshsgdtdhvdsss-scczzc-url/'.format(host),
+
+            'return_url': '{}/payment-done/'.format(host),
+
+            'cancel_return': '{}/payment-cancelled/'.format(host),
         }
-            # 'notify_url': return redirect('paypal-ipn')
 
-            # 'return_url': return redirect('payment_done')),
 
-            # 'cancel_return': return redirect('payment_cancelled')),
 
         form = PayPalPaymentsForm(initial=paypal_dict)
 
@@ -280,12 +282,14 @@ def process_payment(request):
     
 @csrf_exempt
 def payment_done(request):
-    return render(request, 'paypal/payment_done.html')
+    args={'post':request.POST,'get':request.GET}
+    return render(request, 'paypal/payment_done.html',args)
  
  
 @csrf_exempt
 def payment_canceled(request):
-    return render(request, 'paypal/payment_cancelled.html')
+    args={'post':request.POST,'get':request.GET}
+    return render(request, 'paypal/payment_cancelled.html',args)
 
 # def checkout(request):
 #     if request.method == 'POST':
