@@ -263,18 +263,18 @@ def process_payment(request):
 
             'amount': '%.2f' % account_type.price,
 
-            'item_name': 'Order {}'.format(account_type.id),
+            'item_name': 'Order {}'.format(account_type.account_type),
 
-            'invoice': str(account_type.id),
+            'invoice': str(random.randint(00000,99999)),
 
             'currency_code': 'USD',
-
-            'return_url': 'http://{}{}'.format(host, reverse('payment_done')),
             
-        }
-            # 'notify_url': return redirect('paypal-ipn')
+            'notify_url': '{}/q-forex-binary-f-k-defw-dshsgdtdhvdsss-scczzc-url/'.format(host),
 
-            # 'cancel_return': return redirect('payment_cancelled')),
+            'return_url': '{}/payment-done/'.format(host),
+
+            'cancel_return': '{}/payment-cancelled/'.format(host),
+        }
 
         form = PayPalPaymentsForm(initial=paypal_dict)
 
@@ -283,6 +283,14 @@ def process_payment(request):
 @csrf_exempt
 def payment_done(request):
     args={'post':request.POST,'get':request.GET}
+    account_ty = request.POST.get('item_name')
+    if account_ty=='Forex':
+        user_x=Forex(user=request.user,account_type=account_ty,payment=10)
+        user_x.save()
+    elif account_ty=='Binary':
+        user_x=binary_accounts(user=request.user,account_type=account_ty,payment=10)    
+        user_x.save()
+        
     return render(request, 'paypal/payment_done.html',args)
  
  
@@ -290,24 +298,6 @@ def payment_done(request):
 def payment_canceled(request):
     args={'post':request.POST,'get':request.GET}
     return render(request, 'paypal/payment_cancelled.html',args)
-
-# def checkout(request):
-#     if request.method == 'POST':
-#         form = CheckoutForm(request.POST)
-#         if form.is_valid():
-#             cleaned_data = form.cleaned_data
-#         #...
-#         #...
- 
-#             cart.clear(request)
- 
-#             request.session['order_id'] = o.id
-#             return redirect('process_payment')
- 
- 
-#     else:
-#         form = CheckoutForm()
-#         return render(request, 'ecommerce_app/checkout.html', locals())
 
 #END OF PAYPAL PROCESS
 
