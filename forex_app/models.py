@@ -16,7 +16,7 @@ class profile(models.Model):
     result=cls.objects.get(user=user_id)
     return result
 
-c
+
 class Forex(models.Model):
   user = models.OneToOneField(User,on_delete= models.CASCADE)
   account_type = models.CharField(max_length=50)

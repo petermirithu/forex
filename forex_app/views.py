@@ -17,10 +17,10 @@ from django.contrib.auth.hashers import check_password
 import random
 from django.conf import settings
 from decimal import Decimal
-from django.views.decorators.csrf import csrf_exempt
+`````````````````````````````````````        from django.views.decorators.csrf import csrf_exempt`````````````````````````````````````
 from paypal.standard.forms import PayPalPaymentsForm
 from django.urls import reverse
-from paypal.standard.models import PayPalStandardBase
+from paypal.standard.ipn.models import PayPalIPN
 from django.contrib.auth.decorators import permission_required
 
 
@@ -132,11 +132,8 @@ def logout_request(request):
 @login_required(login_url="/login_account/")
 def select_account(request):
     title = 'Select account'
-    stuf=PayPalStandardBase.objects.all()
-    import pdb; pdb.set_trace()
     context = {
         'title': title,
-        'stuf': stuf,
     }
     return render(request, 'select_acc.html', context)
 
@@ -237,7 +234,7 @@ def process_payment(request):
 
             'amount': '%.2f' % account_type.price,
 
-            'item_name': 'Order {}'.format(account_type.account_type),
+            'item_name': '{}'.format(account_type.account_type),
 
             'invoice': str(random.randint(00000,99999)),
 
@@ -266,7 +263,7 @@ def process_payment(request):
 
             'amount': '%.2f' % account_type.price,
 
-            'item_name': 'Order {}'.format(account_type.account_type),
+            'item_name': '{}'.format(account_type.account_type),
 
             'invoice': str(random.randint(00000,99999)),
 
@@ -286,7 +283,8 @@ def process_payment(request):
 @csrf_exempt
 def payment_done(request):
     args={'post':request.POST,'get':request.GET}
-    account_ty = request.POST.get('item_name')
+    # account_ty = request.POST.get('item_name')
+    # stuf= PayPalIPN.objects.get(item_name=)
     if account_ty=='Forex':
         user_x=Forex(user=request.user,account_type=account_ty,payment=10)
         user_x.save()
