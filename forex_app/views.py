@@ -11,13 +11,13 @@ from django.template.loader import render_to_string
 from django.core.mail import send_mail
 from .tokens import account_activation_token
 from .email import send_register_confirm_email
-from .models import *
-from .forms import *
+from .models import profile,Forex,binary_accounts,Account_price,ForexSignals,BinarySignals
+from .forms import LoginForm,BinaryForm,ForexForm
 from django.contrib.auth.hashers import check_password
 import random
 from django.conf import settings
 from decimal import Decimal
-`````````````````````````````````````        from django.views.decorators.csrf import csrf_exempt`````````````````````````````````````
+from django.views.decorators.csrf import csrf_exempt
 from paypal.standard.forms import PayPalPaymentsForm
 from django.urls import reverse
 from paypal.standard.ipn.models import PayPalIPN
@@ -128,6 +128,34 @@ def logout_request(request):
 
 # end of authentication...................................................................................
 
+@login_required(login_url="/login_account/")
+def home(request):
+    try:
+        account_user = Forex.objects.get(user=request.user)
+        if account_user.paid_confirmation==True:
+            messages.info(
+                request, f'Good to see you in {account_user.account_type} forex account!')
+            return render(request, 'index.html')
+        else:
+            request.session['order_id']="Forex"
+            messages.info(request, 'Please Pay to activate your account.')
+            return redirect('process_payment')
+
+    except Forex.DoesNotExist:
+        try:
+            account_user = binary_accounts.objects.get(user=request.user)
+            if account_user.paid_confirmation==True:
+                messages.info(
+                    request, f'Good to see you in {account_user.account_type} binary account!')
+                return render(request, 'index.html')
+            else:                
+                request.session['order_id']="Binary"
+                messages.info(request, 'Please Pay to activate your account.')
+                return redirect('process_payment')                
+
+        except binary_accounts.DoesNotExist:
+            return redirect('select_account')
+
 # selecting account
 @login_required(login_url="/login_account/")
 def select_account(request):
@@ -139,28 +167,6 @@ def select_account(request):
 
 
 @login_required(login_url="/login_account/")
-def binary_account_type(request, acc_type):
-    if request.method == 'POST':
-        email = request.POST.get('email')
-        try:
-            user_exists = User.objects.get(email=email)
-            if user_exists.email != request.user.email:
-                messages.info(
-                    request, 'Please use your correct email address that you registered with!')
-                return redirect('select_account')
-            else:
-                id_gen = random.randint(0000000, 9999999)
-                user_profile = profile.objects.get(user=user_exists)
-                user_profile.user_app_id = id_gen
-                user_profile.save()
-
-                user_binary_acc = binary_accounts(
-                    user=request.user, account_type=acc_type, payment=0)
-                user_binary_acc.save()
-                return redirect('home')
-        except User.DoesNotExist:
-            messages.info(request, 'Please enter a valid email!')
-            return redirect('select_account')
 
 
 @login_required(login_url="/login_account/")
@@ -180,11 +186,13 @@ def forex_account_type(request, acc_type):
                     user_profile.user_app_id = id_forex
                     user_profile.save()
 
-                    user_forex = Forex(user=request.user,
-                                    account_type=acc_type, payment=0)
+                    user_forex = Forex(user=request.user,account_type=acc_type, payment=0,paid_confirmation=True)
                     user_forex.save()
                     return redirect('home')
                 else:
+                    user_x=Forex(user=request.user,account_type=acc_type,payment=10)
+                    user_x.save()
+
                     request.session['order_id'] = acc_type
                     return redirect('process_payment')
                 
@@ -193,41 +201,46 @@ def forex_account_type(request, acc_type):
             return redirect('select_account')
 
 
-# selecting account over
-
-@login_required(login_url="/login_account/")
-def home(request):
-    try:
-        account_user = Forex.objects.get(user=request.user)
-        if account_user:
-            messages.info(
-                request, f'Good to see you in {account_user.account_type} forex account!')
-            return render(request, 'index.html')
-
-    except Forex.DoesNotExist:
+def binary_account_type(request, acc_type):
+    if request.method == 'POST':
+        email = request.POST.get('email')
         try:
-            account_user = binary_accounts.objects.get(user=request.user)
-            if account_user:
+            user_exists = User.objects.get(email=email)
+            if user_exists.email != request.user.email:
                 messages.info(
-                    request, f'Good to see you in {account_user.account_type} binary account!')
-                return render(request, 'index.html')
+                    request, 'Please use your correct email address that you registered with!')
+                return redirect('select_account')
+            else:
+                if acc_type=="free":                    
+                    id_gen = random.randint(0000000, 9999999)
+                    user_profile = profile.objects.get(user=user_exists)
+                    user_profile.user_app_id = id_gen
+                    user_profile.save()
 
-        except binary_accounts.DoesNotExist:
+                    user_binary_acc = binary_accounts(user=request.user, account_type=acc_type, payment=0,paid_confirmation=True)
+                    user_binary_acc.save()
+                    return redirect('home')
+                else:
+
+                    user_x=binary_accounts(user=request.user,account_type=acc_type,payment=10)    
+                    user_x.save()
+
+                    request.session['order_id'] = acc_type
+                    return redirect('process_payment')
+
+        except User.DoesNotExist:
+            messages.info(request, 'Please enter a valid email!')
             return redirect('select_account')
 
+# selecting account over
 
 # paypal  process
-
-
 def process_payment(request):
-
+  
     order_id = request.session.get('order_id')
     if order_id=='forexsilver':
         vari_x='Forex'        
         account_type = get_object_or_404(Account_price, account_type=vari_x)
-
-        # host = request.get_host()
-
         paypal_dict = {
 
             'business': settings.PAYPAL_RECEIVER_EMAIL,
@@ -246,17 +259,15 @@ def process_payment(request):
 
             'cancel_return': 'https://forex254.herokuapp.com/payment-cancelled/',
         }
-
-
-
+        
         form = PayPalPaymentsForm(initial=paypal_dict)
+
 
         return render(request, 'paypal/process_payment.html', {'account_type': account_type, 'form': form})
     
     else:
         vari_y='Binary'
-        account_type = get_object_or_404(Account_price, account_type=vari_y)
-        # host = request.get_host()
+        account_type = get_object_or_404(Account_price, account_type=vari_y)        
         paypal_dict = {
 
             'business': settings.PAYPAL_RECEIVER_EMAIL,
@@ -281,24 +292,31 @@ def process_payment(request):
         return render(request, 'paypal/process_payment.html', {'account_type': account_type, 'form': form})
     
 @csrf_exempt
-def payment_done(request):
-    args={'post':request.POST,'get':request.GET}
-    # account_ty = request.POST.get('item_name')
-    # stuf= PayPalIPN.objects.get(item_name=)
-    if account_ty=='Forex':
-        user_x=Forex(user=request.user,account_type=account_ty,payment=10)
+def payment_done(request):    
+
+    try:
+        user_x=Forex.objects.get(user=request.user)   
+        user_x.paid_confirmation=True
         user_x.save()
-    elif account_ty=='Binary':
-        user_x=binary_accounts(user=request.user,account_type=account_ty,payment=10)    
-        user_x.save()
-        
-    return render(request, 'paypal/payment_done.html',args)
- 
+        messages.info(request, 'Welcome to your Forex Account!')
+        return render(request, 'paypal/payment_done.html')
+
+    except Forex.DoesNotExist:
+
+        try:
+            user_y=binary_accounts.objects.get(user=request.user)    
+            user_y.paid_confirmation=True
+            user_y.save()
+            messages.info(request, 'Welcome to your Binary Account!')
+            return render(request, 'paypal/payment_done.html')
+
+        except binary_accounts.DoesNotExist:
+            messages.info(request, 'Invalid action!')
+            return render(request, 'paypal/payment_error.html')                                               
  
 @csrf_exempt
-def payment_canceled(request):
-    args={'post':request.POST,'get':request.GET}
-    return render(request, 'paypal/payment_cancelled.html',args)
+def payment_canceled(request):    
+    return render(request, 'paypal/payment_cancelled.html')
 
 #END OF PAYPAL PROCESS
 
