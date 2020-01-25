@@ -1,16 +1,11 @@
 {% extends 'base.html' %}
  
-{% block title %}Make Payment{% endblock %}
- 
 {% block content %}
+ 
+    <h1>Payment Error.</h1>
 
     {% for message in messages%}
       <h3 class="alert-danger">{{message}}</h3>
     {% endfor %}
-    
-    <div class="card">
-        <h4>Pay with PayPal</h4>
-        {{ form.render }}
-    </div>
     
 {% endblock %}
