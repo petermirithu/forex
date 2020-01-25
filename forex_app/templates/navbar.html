@@ -9,7 +9,10 @@
 
       <li class="nav-item active">      
           <a style="color:lightblue" class="nav-link" href="{% url 'home' %}">Home</a>                  
-      </li>                                                                                         
+      </li> 
+      <li class="nav-item ">      
+        <a style="color:lightblue" class="nav-link" href="/signals/">Signals</a>                  
+    </li>                                                                                         
       
       {% if user.is_superuser %}
         <li class="nav-item">
@@ -28,7 +31,7 @@
           <p>{{user.username}}</p>
         {% endif %}                  
         <li class="nav-item">                    
-          <a style="color:lightblue" class="nav-link" href="">Profile</a>
+          <a style="color:lightblue" class="nav-link" href="/select_account/">Upgrage Account</a>
         </li>
 
         <li class="nav-item">   

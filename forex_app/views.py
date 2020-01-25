@@ -133,7 +133,7 @@ def logout_request(request):
 def home(request):
     try:
         account_user = Forex.objects.get(user=request.user)
-        if account_user.paid_confirmation==True:
+        if account_user.paid_confirmation==True :
             messages.info(
                 request, f'Good to see you in {account_user.account_type} forex account!')
             return render(request, 'index.html')
@@ -424,7 +424,7 @@ def view_today_signal(request):
         date = dt.date.today()
         forexuser = Forex.objects.get(user = request.user)
         forexSignals = ForexSignals.objects.filter(posted_on__date = date)
-        import pdb; pdb.set_trace()
+        
         context ={
             'forexuser':forexuser,
             'date':date,
@@ -450,13 +450,12 @@ def view_single_forex_signal(request,id):
     signal = ForexSignals.objects.get(id = id)
     forexuser = Forex.objects.get(user = request.user)
     date = dt.date.today()
-    binarySignals = BinarySignals.objects.filter(posted_on__date = date)
     forexSignals = ForexSignals.objects.filter(posted_on__date = date)
     context = {
         'signal':signal,
         'forexuser':forexuser,
         'date':date,
-        'binarySignals':binarySignals,
+        
         'forexSignals':forexSignals,
         'forexuser':forexuser,
         
@@ -467,17 +466,14 @@ def view_single_forex_signal(request,id):
 def view_single_binary_signal(request,id):
     binaryuser = binary_accounts.objects.get(user = request.user)
     signals = BinarySignals.objects.get(id=id)
-    
     binaryuser = binary_accounts.objects.get(user = request.user)
     date = dt.date.today()
     binarySignals = BinarySignals.objects.filter(posted_on__date = date)
-    forexSignals = ForexSignals.objects.filter(posted_on__date = date)
     context = {
         'signals':signals,
-        'forexuser':forexuser,
         'date':date,
         'binarySignals':binarySignals,
-        'forexSignals':forexSignals,
+        
         
         'binaryuser':binaryuser,
     }
