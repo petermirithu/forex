@@ -19,6 +19,9 @@ urlpatterns = [
     path('payment-done/', views.payment_done, name='payment_done'),
     path('payment-cancelled/', views.payment_canceled, name='payment_cancelled'),
     url(r'^q-forex-binary-f-k-defw-dshsgdtdhvdsss-scczzc-url/',include('paypal.standard.ipn.urls')),
+    path('single/forex/signal/<int:id>',views.view_single_forex_signal,name="single-forex"),
+    path('single/binary/signal/<int:id>',views.view_single_binary_signal,name="single-binary"),
+    path('signals/',views.view_today_signal,name="signals"),
     
     # admin
     path("dashboard/", views.user_dashboard, name="user_dashboard"),    

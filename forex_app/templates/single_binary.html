@@ -1,0 +1,26 @@
+{%load bootstrap4%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    {%include 'side_nav.html'%}
+    <div class="container">
+        <div class="card">
+            <p>
+                {{signals.signal}}
+            </p>
+            <p>
+                {{signals.currency_pair}}
+            </p>
+            <p>
+                {{signals.chart_time_frame}}
+            </p>
+        </div>
+    </div>
+</body>
+</html>

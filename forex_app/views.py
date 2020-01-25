@@ -17,11 +17,12 @@ from django.contrib.auth.hashers import check_password
 import random
 from django.conf import settings
 from decimal import Decimal
-`````````````````````````````````````        from django.views.decorators.csrf import csrf_exempt`````````````````````````````````````
+from django.views.decorators.csrf import csrf_exempt
 from paypal.standard.forms import PayPalPaymentsForm
 from django.urls import reverse
 from paypal.standard.ipn.models import PayPalIPN
 from django.contrib.auth.decorators import permission_required
+import datetime as dt
 
 
 def register(request):
@@ -377,9 +378,89 @@ def user_activate(request, user_id):
     messages.success(request, f"{user.username}'s account has been successfully activated!")
     return redirect("system_users")
 
+#end DASHBOARD
+
 @login_required()
 def logout_user(request):
     logout(request)
     messages.success(request, "You have successfully logout out!!!")
     return redirect('home')
     
+@login_required()
+def view_today_signal(request):
+    if Forex.objects.filter(user = request.user) and binary_accounts.objects.filter(user = request.user):
+        forexuser = Forex.objects.get(user = request.user)
+        binaryuser = binary_accounts.objects.get(user = request.user)
+        date = dt.date.today()
+        binarySignals = BinarySignals.objects.filter(posted_on__date = date)
+        forexSignals = ForexSignals.objects.filter(posted_on__date = date)
+        context = {
+            'date':date,
+            'binarySignals':binarySignals,
+            'forexSignals':forexSignals,
+            'forexuser':forexuser,
+            'binaryuser':binaryuser,
+        }
+        return render(request,'signals.html',context)
+    elif Forex.objects.filter(user = request.user):
+        date = dt.date.today()
+        forexuser = Forex.objects.get(user = request.user)
+        forexSignals = ForexSignals.objects.filter(posted_on__date = date)
+        import pdb; pdb.set_trace()
+        context ={
+            'forexuser':forexuser,
+            'date':date,
+            'forexSignals':forexSignals,
+        }
+        return render(request,'signals.html',context)
+    elif binary_accounts.objects.filter(user = request.user):
+        date  = dt.date.today()
+        binaryuser = binary_accounts.objects.get(user = request.user)
+        binarySignals = BinarySignals.objects.filter(posted_on__date = date)
+        context = {
+            'binaryuser':binaryuser,
+            'date':date,
+            'binarySignals':binarySignals,
+        }
+        return render(request,'signals.html',context)
+    else :
+        return redirect('home')
+
+@login_required()
+def view_single_forex_signal(request,id):
+    forexuser = Forex.objects.get(user = request.user)
+    signal = ForexSignals.objects.get(id = id)
+    forexuser = Forex.objects.get(user = request.user)
+    date = dt.date.today()
+    binarySignals = BinarySignals.objects.filter(posted_on__date = date)
+    forexSignals = ForexSignals.objects.filter(posted_on__date = date)
+    context = {
+        'signal':signal,
+        'forexuser':forexuser,
+        'date':date,
+        'binarySignals':binarySignals,
+        'forexSignals':forexSignals,
+        'forexuser':forexuser,
+        
+    }
+    return render(request,'single_forex.html',context)
+
+@login_required()
+def view_single_binary_signal(request,id):
+    binaryuser = binary_accounts.objects.get(user = request.user)
+    signals = BinarySignals.objects.get(id=id)
+    
+    binaryuser = binary_accounts.objects.get(user = request.user)
+    date = dt.date.today()
+    binarySignals = BinarySignals.objects.filter(posted_on__date = date)
+    forexSignals = ForexSignals.objects.filter(posted_on__date = date)
+    context = {
+        'signals':signals,
+        'forexuser':forexuser,
+        'date':date,
+        'binarySignals':binarySignals,
+        'forexSignals':forexSignals,
+        
+        'binaryuser':binaryuser,
+    }
+    return render(request,'single_binary.html',context)
