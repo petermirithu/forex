@@ -30,5 +30,6 @@ urlpatterns = [
     path('deactivate/user/<int:user_id>', views.user_deactivate, name='deactivate_user'),  
     path('add/forex/signals/',views.forexform,name='add-forex'), 
     path('add/binary/signals/',views.binaryform,name='add-binary'), 
+    path("blogs/",views.blogs,name="blogs"),
     url(r'^logout/$',views.logout_user,name='logout')
 ]

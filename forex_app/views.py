@@ -12,7 +12,7 @@ from django.core.mail import send_mail
 from .tokens import account_activation_token
 from .email import send_register_confirm_email
 from .models import profile,Forex,binary_accounts,Account_price,ForexSignals,BinarySignals
-from .forms import LoginForm,BinaryForm,ForexForm
+from .forms import *
 from django.contrib.auth.hashers import check_password
 import random
 from django.conf import settings
@@ -47,7 +47,7 @@ def register(request):
                 user.is_active = False
                 user.save()
 
-                forex_site = get_current_site(request)
+                forex_site = https://forex254.herokuapp.com/
                 domain = forex_site.domain
                 uid = urlsafe_base64_encode(force_bytes(user.pk))
                 token = account_activation_token.make_token(user)
@@ -165,10 +165,10 @@ def select_account(request):
         'title': title,
     }
     return render(request, 'select_acc.html', context)
-
-
 @login_required(login_url="/login_account/")
-
+def profile(request):
+    profile = Profile.objects.get(user = request.user)
+    return render(request,"profile.html",{"profile":profile})
 
 @login_required(login_url="/login_account/")
 def forex_account_type(request, acc_type):
@@ -396,6 +396,26 @@ def user_activate(request, user_id):
     messages.success(request, f"{user.username}'s account has been successfully activated!")
     return redirect("system_users")
 
+@login_required()
+@permission_required("True","home")
+def blogs(request):
+    if request.method == 'POST':
+        form = BlogForm(request.POST,request.FILES)
+        if form.is_valid():
+            blog = form.save(commit = False)
+            blog.posted_by = request.user
+            blog.save()
+            return redirect('home')
+        else:
+            messages.info(request,'All fields are required')
+            return redirect('blogs')
+    else:
+        form = BlogForm()
+        context ={
+            'form':form,
+        }
+        return render(request,'admin_site/blog.html',context)
+    
 #end DASHBOARD
 
 @login_required()
@@ -478,3 +498,5 @@ def view_single_binary_signal(request,id):
         'binaryuser':binaryuser,
     }
     return render(request,'single_binary.html',context)
+
+            

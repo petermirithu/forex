@@ -8,6 +8,7 @@ class profile(models.Model):
   signup_confirmation=models.BooleanField(default=False)  
   user_app_id=models.IntegerField(default=0)
 
+
   def __str__(self):
     return self.user.username
   
@@ -50,7 +51,7 @@ class ForexSignals(models.Model):
   entry_price = models.IntegerField()
   take_profit = models.IntegerField()
   stop_loss = models.IntegerField()
-  signal = models.CharField(max_length=900)
+  signal = models.IntegerField(default = 0)
   posted_by = models.ForeignKey(User,on_delete= models.CASCADE)
   posted_on = models.DateTimeField(auto_now_add=True)
 
@@ -60,11 +61,22 @@ class ForexSignals(models.Model):
 class BinarySignals(models.Model):
   currency_pair = models.CharField(max_length=700)
   chart_time_frame = models.DateTimeField(auto_now_add=True)
+  starttime = models.DateTimeField()
   expiration_time = models.DateTimeField()
-  signal = models.CharField(max_length=900)
+  signal = models.IntegerField(default=0)
   posted_by = models.ForeignKey(User,on_delete= models.CASCADE)
   posted_on = models.DateTimeField(auto_now_add=True)
 
   def __str__(self):
     return self.currency_pair
 
+class Blogs(models.Model):
+  blog = models.CharField(max_length=1000)
+  posted_by = models.ForeignKey(User,on_delete = models.CASCADE)
+  posted_on = models.DateTimeField(auto_now_add= True)
+  title = models.CharField(max_length= 300)
+  blog_pic = models.ImageField(upload_to="image/",blank=True)
+  
+  
+  
+  

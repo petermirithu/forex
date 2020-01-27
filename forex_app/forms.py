@@ -30,3 +30,10 @@ class ForexForm(forms.ModelForm):
       'posted_on',
     ]
    
+class BlogForm(forms.ModelForm):
+  class Meta:
+    model = Blogs
+    exclude = [
+      'posted_by',
+      'posted_on',
+    ]

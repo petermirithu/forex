@@ -1,0 +1,33 @@
+{% extends 'General/base.html'%}
+{% load staticfiles %}
+{% load bootstrap4 %}
+{% block content%}
+
+<head>
+    <link rel="stylesheet" href="{%static 'css/profile.css'%}">
+</head>
+
+<body style="background-color: rgb(235, 232, 232); !important">
+
+
+
+    <div class="container" id='prof'>
+        <h2 class="text-center" style="margin-bottom: 10px;">{{user}} profile</h2>
+        <div class="card" style="background-color:white">
+            <div class="row">
+                {% for prof in profile %}
+                <div class="col-md-10" style="margin-left: 20px;margin-top:30px">
+                    <img src="{{prof.profile_pic.url}}" alt="profile"
+                        style="width: 350px; height: 350px; border-radius: 50%">
+                    <p><b>Name: </b><i>{{prof.username}}</i></p>
+                    
+                    <p><b>account type: </b>{{prof.user.account_type}}</p>
+                </div>
+                <div class="col-md-2"></div>
+                {% endfor%}
+            </div>
+        </div>
+    </div>
+</body>
+
+{% endblock %}
