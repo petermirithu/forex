@@ -47,7 +47,7 @@ def register(request):
                 user.is_active = False
                 user.save()
 
-                forex_site = https://forex254.herokuapp.com/
+                forex_site =https://forex254.herokuapp.com/
                 domain = forex_site.domain
                 uid = urlsafe_base64_encode(force_bytes(user.pk))
                 token = account_activation_token.make_token(user)
