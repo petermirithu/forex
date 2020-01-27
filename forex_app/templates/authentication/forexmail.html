@@ -3,6 +3,6 @@ Hi {{name}},
 
 Please click the following link to confirm your registration:
 
-<a href="http://{{domain}}{% url 'activate' uidb64=uid token=token %}"><button>Activate Account</button></a>
+<a href="{{domain}}{% url 'activate' uidb64=uid token=token %}"><button>Activate Account</button></a>
 
 {% endautoescape %}
