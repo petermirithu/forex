@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load bootstrap4 %}
+{% block content %}
+    <h1 style="margin-top: 100px;font-size:30px">Edit your profile {{current_user}}</h1>
+    <div class="container" style="margin-top :30px">
+        <div class="edit">
+            <form action="{%url 'update'%}" method = "POST" enctype="multipart/form-data">
+                {% csrf_token%}
+               {% bootstrap_form form1%}
+               {% bootstrap_form form %}
+                
+                <input type="submit" class="btn btn-primary" >
+            </form>
+        </div>
+    </div>
+{% endblock %}

@@ -37,3 +37,23 @@ class BlogForm(forms.ModelForm):
       'posted_by',
       'posted_on',
     ]
+            
+class UserUpdateform(forms.ModelForm):
+    email = forms.EmailField()
+    class Meta:
+        model = User
+        fields = [
+            'username',
+            'email',
+        ]
+
+class UpdateProfileForm(forms.ModelForm):
+    bio = forms.Textarea()
+    class Meta:
+        model = Profile
+        exclude =[
+            'updated_on',
+            'user',
+            'user_app_id',
+            'signup_confirmation',
+        ]

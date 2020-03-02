@@ -1,0 +1,20 @@
+{%extends 'base.html'%}
+{%load bootstrap4%}
+{%load static%}
+{%block content%}
+    <div class="container">
+        {%for message in messages%}
+            <h3>{{message}}</h3>
+        {%endfor%}
+        <div class="jumbotron">
+            <form action="/change/password/" method="POST">
+                {%csrf_token%}
+                <label for="passcode">Enter new password</label><br>
+                <input type="password" name="passcode" placeholder="New password"><br>
+                <label for="confirm">Confirm password</label><br>
+                <input type="password" name="confirm" placeholder="Confirm password"><br><br>
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+    </div>
+{%endblock%}

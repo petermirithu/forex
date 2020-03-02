@@ -1,4 +1,4 @@
-{% extends 'General/base.html'%}
+{% extends 'base.html'%}
 {% load staticfiles %}
 {% load bootstrap4 %}
 {% block content%}
@@ -15,16 +15,19 @@
         <h2 class="text-center" style="margin-bottom: 10px;">{{user}} profile</h2>
         <div class="card" style="background-color:white">
             <div class="row">
-                {% for prof in profile %}
+                
                 <div class="col-md-10" style="margin-left: 20px;margin-top:30px">
-                    <img src="{{prof.profile_pic.url}}" alt="profile"
-                        style="width: 350px; height: 350px; border-radius: 50%">
-                    <p><b>Name: </b><i>{{prof.username}}</i></p>
+                    <p><b>Name: </b><i>{{profile.user.username}}</i></p>
+                    <p><b>Binary account  type: </b>{{profile.user.binary_accounts.account_type}}</p>
                     
-                    <p><b>account type: </b>{{prof.user.account_type}}</p>
+                    <p><b>Forex account type: </b>{{profile.user.Forex.account_type}}</p>
+                    <p><b>ID:: {{profile.user_app_id}}</b></p>
+                    <p><b>Contact :: {{profile.contact}}</b></p>
                 </div>
-                <div class="col-md-2"></div>
-                {% endfor%}
+                <div class="col-md-2">
+                    <a href="/update/profile/" class="btn" style="color: white;background-color: black;">Update</a>
+                </div>
+                
             </div>
         </div>
     </div>

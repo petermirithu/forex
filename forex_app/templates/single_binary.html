@@ -46,18 +46,28 @@
                     {% endfor %}
                 </ul>
                 {% endif %}
-                <div class="container">
-                    <div class="card">
-                        <p>
-                            {{signals.signal}}
-                        </p>
-                        <p>
-                            {{signals.currency_pair}}
-                        </p>
-                        <p>
-                            {{signals.entry_price}}
-                        </p>
-                    </div>
+                <div class="">
+                    <table class="table">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Currency pair</th>
+                                <th scope="col">Signal</th>
+                                <th scope="col">Start_time_frame</th>
+                                <th scope="col">Expiration time</th>
+                                <th scope="col">Posted by</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{signals.currency_pair}}</td>
+                                <td>{{signals.signal}}</td>
+                                <td>{{signals.starttime}}</td>
+                                <td>{{signals.expiration_time}}</td>
+                                <td>{{signals.posted_by}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
                 </div>
             </main>
         </div>

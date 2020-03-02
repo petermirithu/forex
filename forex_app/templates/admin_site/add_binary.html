@@ -38,6 +38,8 @@
             <form action="/add/binary/signals/" method="POST">
                 {% csrf_token %}
                 {% bootstrap_form form %}
+                <label for="input">start time</label>
+                <input id="input1" name="start_time"><br><br>
                 <label for="input">Expiry time</label>
                 <input id="input" name="input_time">
                 <br>
@@ -52,5 +54,6 @@
     <script src="https://unpkg.com/gijgo@1.9.13/js/gijgo.min.js" type="text/javascript"></script>
     <script>
         $('#input').datetimepicker({ footer: true, modal: true });
+        $('#input1').datetimepicker({ footer: true, modal: true });
     </script>
 {% endblock %}

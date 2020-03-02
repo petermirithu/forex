@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-class profile(models.Model):
+class Profile(models.Model):
   user=models.OneToOneField(User, on_delete=models.CASCADE)  
   contact=models.CharField(max_length=15,blank=True)  
   signup_confirmation=models.BooleanField(default=False)  
@@ -24,6 +24,8 @@ class Forex(models.Model):
   payment = models.IntegerField(default=0)
   paid_confirmation=models.BooleanField(default=False)
   date = models.DateTimeField(auto_now_add=True)
+  paid_on = models.DateTimeField(default = '2020-2-10')
+
 
   def __str__(self):
     return self.user.username
@@ -35,6 +37,7 @@ class binary_accounts(models.Model):
   payment=models.IntegerField(default=0)
   paid_confirmation=models.BooleanField(default=False)
   created_date=models.DateField(auto_now_add=True)
+  paid_on = models.DateTimeField(default = '2020-2-10')
 
   def __str__(self):
     return self.user.username

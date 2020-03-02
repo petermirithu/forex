@@ -1,0 +1,31 @@
+{%extends 'base.html'%}
+{%load bootstrap4%}
+{%block content%}
+    <div class="container">
+        <h1>The last {{binary_histo.count}} binary signals</h1>
+        <div class="binary">
+            {%for binary in binarys_histo%}
+            <table class="table" style="margin-bottom: 15px;">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Currency pair</th>
+                        <th scope="col">Signal</th>
+                        <th scope="col">Start_time_frame</th>
+                        <th scope="col">Expiration time</th>
+                        <th scope="col">Posted by</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>{{binary.currency_pair}}</td>
+                        <td>{{binary.signal}}</td>
+                        <td>{{binary.starttime}}</td>
+                        <td>{{binary.expiration_time}}</td>
+                        <td>{{binary.posted_by}}</td>
+                    </tr>
+                </tbody>
+            </table>
+            {%endfor%}
+        </div>
+    </div>
+{%endblock%}
