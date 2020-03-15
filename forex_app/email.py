@@ -15,7 +15,7 @@ def send_register_confirm_email(name,receiver,domain,uid,token):
     
     )
   
-  sg = SendGridAPIClient('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')
+  sg = SendGridAPIClient('sendgrid api')
 
   response = sg.send(message)
 
